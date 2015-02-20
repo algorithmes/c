@@ -5,11 +5,11 @@ int main()
 {
     int X, N, T[100], PP, i, j, test;
 
-    printf("Saisir N:"); //Array Elements' number
+    printf("Enter N:"); //Array Elements' number
     scanf("%d", &N);
-    printf("Saisir X:"); //Integer's value to search for nearest
+    printf("Enter X:"); //Integer's value to search for nearest
     scanf("%d", &X);
-    printf("Elements du tableau  :");
+    printf("Elements of array  :");
     for(i=0;i<N;i++)
     {
         scanf("%d", &T[i]);
@@ -25,7 +25,7 @@ int main()
         }
 
         if(test == 1)
-            printf("MB: %d", T[i]);
+            printf("Nearest Element of X = %d is: %d", X, T[i]);
     }
     system("pause");
     return 0;
