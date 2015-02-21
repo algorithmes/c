@@ -12,6 +12,8 @@ int __cdecl main(void)
 {
     WSADATA wsaData;
     int iResult;
+	char str[512];
+	FILE *fp;
     SOCKET ListenSocket = INVALID_SOCKET;
     SOCKET ClientSocket = INVALID_SOCKET;
     struct addrinfo *result = NULL;
@@ -30,13 +32,16 @@ int __cdecl main(void)
     iResult = bind( ListenSocket, result->ai_addr, (int)result->ai_addrlen);
     freeaddrinfo(result);
 	while(1) {
+	fp = fopen("index.html", "r");
     iResult = listen(ListenSocket, SOMAXCONN);
     ClientSocket = accept(ListenSocket, NULL, NULL);
 		iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
         if (iResult > 0) {
-            iSendResult = send( ClientSocket, "HTTP/1.1 200 OK\nServer: Apache\nContent-Length: 87\nConnection: close\nContent-Type: text/html\n\n<html><head><title></title></head><body><h1>Hello World And Welcome</h1></body></html>", 251, 0 );
-            printf("Bytes sent: %d\n", iSendResult);
-        }
+			while( fgets (str, 512, fp)!=NULL ){
+				iSendResult = send( ClientSocket, str , strlen(str), 0 );
+				printf("Bytes sent: %d\n", iSendResult);
+			}
+		}
 		iResult = shutdown(ClientSocket, SD_SEND);
     }
     closesocket(ClientSocket);
