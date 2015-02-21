@@ -13,6 +13,7 @@ int __cdecl main(void)
     WSADATA wsaData;
     int iResult;
 	char str[512];
+	char path[1035];
 	FILE *fp;
     SOCKET ListenSocket = INVALID_SOCKET;
     SOCKET ClientSocket = INVALID_SOCKET;
@@ -32,13 +33,13 @@ int __cdecl main(void)
     iResult = bind( ListenSocket, result->ai_addr, (int)result->ai_addrlen);
     freeaddrinfo(result);
 	while(1) {
-	fp = fopen("index.html", "r");
-    iResult = listen(ListenSocket, SOMAXCONN);
-    ClientSocket = accept(ListenSocket, NULL, NULL);
+		iResult = listen(ListenSocket, SOMAXCONN);
+		ClientSocket = accept(ListenSocket, NULL, NULL);
 		iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-        if (iResult > 0) {
-			while( fgets (str, 512, fp)!=NULL ){
-				iSendResult = send( ClientSocket, str , strlen(str), 0 );
+        fp = _popen("php index.html", "r");
+		if (iResult > 0) {
+			while( fgets(path, sizeof(path)-1, fp ) ){
+				iSendResult = send( ClientSocket, path , strlen(path), 0 );
 				printf("Bytes sent: %d\n", iSendResult);
 			}
 		}
