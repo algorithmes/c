@@ -12,8 +12,7 @@ int __cdecl main(void)
 {
     WSADATA wsaData;
     int iResult;
-	char str[512];
-	char path[1035];
+	char str[512], path[1035], method[20], url[] = "";
 	FILE *fp;
     SOCKET ListenSocket = INVALID_SOCKET;
     SOCKET ClientSocket = INVALID_SOCKET;
@@ -38,9 +37,11 @@ int __cdecl main(void)
 		iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
         fp = _popen("php index.html", "r");
 		if (iResult > 0) {
+			sscanf( recvbuf, "%s %s", method, url);
+			printf("%s %s\n",method, url);
 			while( fgets(path, sizeof(path)-1, fp ) ){
 				iSendResult = send( ClientSocket, path , strlen(path), 0 );
-				printf("Bytes sent: %d\n", iSendResult);
+				//printf("Bytes sent: %d\n", iSendResult);
 			}
 		}
 		iResult = shutdown(ClientSocket, SD_SEND);
